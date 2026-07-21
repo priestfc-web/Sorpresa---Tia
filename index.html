@@ -1,19 +1,109 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Una sorpresa para ti ❤️</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prueba de cámara</title>
+
+<style>
+
+body{
+background:#111;
+color:white;
+font-family:Arial;
+text-align:center;
+padding:20px;
+}
+
+video{
+width:95%;
+border-radius:15px;
+margin-top:20px;
+}
+
+button{
+margin-top:20px;
+padding:15px;
+font-size:20px;
+border:none;
+border-radius:15px;
+background:#ff4f8b;
+color:white;
+}
+
+</style>
+
 </head>
-<body style="background:#ffeef5;text-align:center;font-family:Arial;padding:40px;">
 
-<h1>❤️ Tengo una sorpresa para ti ❤️</h1>
+<body>
 
-<p>Si estás viendo esto... todo va perfecto.</p>
+<h1>Prueba de cámara 📹</h1>
 
-<button style="padding:15px 30px;font-size:20px;border:none;border-radius:15px;background:#ff4d88;color:white;">
-Descubrir sorpresa
+<p>Pulsa el botón.</p>
+
+<button onclick="grabar()">
+Comenzar
 </button>
+
+<video id="camara" autoplay playsinline muted></video>
+
+<h2>Tu reacción</h2>
+
+<video id="resultado" controls style="display:none;"></video>
+
+<script>
+
+let mediaRecorder;
+let partes=[];
+
+async function grabar(){
+
+const stream=await navigator.mediaDevices.getUserMedia({
+video:{
+facingMode:"user"
+},
+audio:true
+});
+
+document.getElementById("camara").srcObject=stream;
+
+partes=[];
+
+mediaRecorder=new MediaRecorder(stream);
+
+mediaRecorder.ondataavailable=(e)=>{
+partes.push(e.data);
+}
+
+mediaRecorder.onstop=()=>{
+
+const blob=new Blob(partes,{
+type:"video/webm"
+});
+
+const url=URL.createObjectURL(blob);
+
+const video=document.getElementById("resultado");
+
+video.src=url;
+
+video.style.display="block";
+
+};
+
+mediaRecorder.start();
+
+setTimeout(()=>{
+
+mediaRecorder.stop();
+
+stream.getTracks().forEach(track=>track.stop());
+
+},20000);
+
+}
+
+</script>
 
 </body>
 </html>
