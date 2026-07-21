@@ -1,365 +1,156 @@
-
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Una sorpresa para ti ❤️</title>
-
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
 body{
-
 background:linear-gradient(135deg,#ff9ecb,#ffd9ec);
-
-height:100vh;
-
+min-height:100vh;
 display:flex;
-
 justify-content:center;
-
-align-items:center;
-
-overflow:hidden;
-
+align-items:flex-start;
+overflow-y:auto;
+padding:30px 0;
 }
-
 #contenedor{
-
 width:800px;
-
 max-width:90%;
-
-background:white;
-
+margin:30px 0;
+background:#fff;
 border-radius:25px;
-
 padding:40px;
-
 box-shadow:0 20px 60px rgba(0,0,0,.25);
-
 text-align:center;
-
-animation:aparecer .8s ease;
-
 }
-
-@keyframes aparecer{
-
-from{
-opacity:0;
-transform:scale(.95);
-}
-
-to{
-opacity:1;
-transform:scale(1);
-}
-
-}
-
-h1{
-
-font-size:45px;
-
-margin-bottom:25px;
-
-color:#ff4081;
-
-}
-
-p{
-
-font-size:22px;
-
-margin-bottom:30px;
-
-color:#444;
-
-line-height:1.5;
-
-}
-
+h1{font-size:42px;color:#ff4081;margin-bottom:20px}
+p{font-size:22px;color:#444;line-height:1.5;margin-bottom:25px}
 button{
-
-background:#ff4081;
-
-color:white;
-
-border:none;
-
-padding:18px 35px;
-
-font-size:22px;
-
-border-radius:50px;
-
-cursor:pointer;
-
-transition:.3s;
-
+background:#ff4081;color:#fff;border:none;padding:18px 35px;
+font-size:22px;border-radius:50px;cursor:pointer
 }
-
-button:hover{
-
-transform:scale(1.05);
-
-}
-
 video{
-
-margin-top:25px;
-
-width:100%;
-
-border-radius:20px;
-
 display:none;
-
+width:80%;
+max-width:500px;
+margin:20px auto;
+border-radius:18px;
 }
-
 #contador{
-
+display:none;
 font-size:120px;
-
-display:none;
-
-color:#ff4081;
-
 font-weight:bold;
-
-margin-top:25px;
-
-}
-
-#ultra{
-
-display:none;
-
-width:75%;
-
-margin:auto;
-
-margin-top:20px;
-
-border-radius:20px;
-
-animation:zoom .8s ease;
-
-}
-
-@keyframes zoom{
-
-from{
-
-opacity:0;
-
-transform:scale(.7);
-
-}
-
-to{
-
-opacity:1;
-
-transform:scale(1);
-
-}
-
-}
-
-#final{
-
-display:none;
-
 color:#ff4081;
-
-margin-top:25px;
-
-font-size:32px;
-
+margin:20px 0;
 }
-
+#ultra{
+display:none;
+width:75%;
+max-width:450px;
+margin:20px auto;
+border-radius:20px;
+animation:zoom .8s ease;
+}
+#titulo2,#texto2,#final{display:none}
+#final{color:#ff4081;font-size:30px;margin-top:20px}
+@keyframes zoom{
+from{opacity:0;transform:scale(.8)}
+to{opacity:1;transform:scale(1)}
+}
 </style>
-
 </head>
-
 <body>
 
 <div id="contenedor">
 
-<h1>
-❤️ Hola hermanita ❤️
-</h1>
+<h1>❤️ Hola hermanita ❤️</h1>
 
-<p>
+<p>Tengo algo muy importante que decirte...<br><br>
+Pero antes quiero guardar este momento para siempre.</p>
 
-Tengo algo muy importante que decirte...
+<button id="comenzar">Comenzar</button>
 
-Pero antes quiero guardar este momento para siempre.
-
-</p>
-
-<button id="comenzar">
-
-Comenzar
-
-</button>
-
-<div id="contador">
-
-3
-
-</div>
+<div id="contador">3</div>
 
 <video id="camara" autoplay playsinline muted></video>
 
 <img id="ultra" src="Ultrasonido.jpg">
 
-<h1 id="titulo2" style="display:none;">
+<h1 id="titulo2">👶 ¡VAS A SER TÍA! 👶</h1>
 
-👶 ¡VAS A SER TÍA! 👶
-
-</h1>
-
-<p id="texto2" style="display:none;">
-
-Nuestro bebé ya viene en camino.
-
-Queríamos que fueras de las primeras personas en enterarte.
-
-❤️
-
+<p id="texto2">
+Nuestro bebé ya viene en camino.<br><br>
+Queríamos que fueras de las primeras personas en enterarte. ❤️
 </p>
 
-<h2 id="final">
-
-❤️ ¡Tu reacción quedó grabada! ❤️
-
-</h2>
+<h2 id="final">❤️ ¡Tu reacción quedó grabada! ❤️</h2>
 
 <video id="resultado" controls></video>
 
 </div>
 
 <script>
+const boton=document.getElementById("comenzar");
+const camara=document.getElementById("camara");
+const contador=document.getElementById("contador");
+const ultra=document.getElementById("ultra");
+const titulo=document.getElementById("titulo2");
+const texto=document.getElementById("texto2");
+const resultado=document.getElementById("resultado");
+const finalMsg=document.getElementById("final");
 
-const boton = document.getElementById("comenzar");
-const camara = document.getElementById("camara");
-const contador = document.getElementById("contador");
-const ultra = document.getElementById("ultra");
-const titulo = document.getElementById("titulo2");
-const texto = document.getElementById("texto2");
-const resultado = document.getElementById("resultado");
-const final = document.getElementById("final");
+let stream,mediaRecorder,partes=[];
 
-let stream;
-let mediaRecorder;
-let partes = [];
+boton.onclick=async()=>{
+try{
+boton.style.display="none";
+stream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+camara.srcObject=stream;
+camara.style.display="block";
 
-boton.onclick = async () => {
+const opciones={};
+if(MediaRecorder.isTypeSupported("video/webm;codecs=vp9")) opciones.mimeType="video/webm;codecs=vp9";
+else if(MediaRecorder.isTypeSupported("video/webm;codecs=vp8")) opciones.mimeType="video/webm;codecs=vp8";
 
-    try {
+mediaRecorder=new MediaRecorder(stream,opciones);
+partes=[];
 
-        boton.style.display = "none";
+mediaRecorder.ondataavailable=e=>{if(e.data.size>0) partes.push(e.data);};
 
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: true
-        });
-
-        camara.srcObject = stream;
-        camara.style.display = "block";
-
-        const opciones = {};
-
-        if (MediaRecorder.isTypeSupported("video/webm;codecs=vp9")) {
-            opciones.mimeType = "video/webm;codecs=vp9";
-        } else if (MediaRecorder.isTypeSupported("video/webm;codecs=vp8")) {
-            opciones.mimeType = "video/webm;codecs=vp8";
-        }
-
-        mediaRecorder = new MediaRecorder(stream, opciones);
-
-        partes = [];
-
-        mediaRecorder.ondataavailable = (e) => {
-            if (e.data.size > 0) {
-                partes.push(e.data);
-            }
-        };
-
-        mediaRecorder.onstop = () => {
-
-            const blob = new Blob(partes, {
-                type: mediaRecorder.mimeType || "video/webm"
-            });
-
-            resultado.src = URL.createObjectURL(blob);
-
-            camara.style.display = "none";
-            final.style.display = "block";
-            resultado.style.display = "block";
-
-            stream.getTracks().forEach(track => track.stop());
-
-        };
-
-        mediaRecorder.start();
-
-        let numero = 3;
-
-        contador.style.display = "block";
-        contador.innerHTML = numero;
-
-        const intervalo = setInterval(() => {
-
-            numero--;
-
-            if (numero > 0) {
-                contador.innerHTML = numero;
-            }
-
-            if (numero === 0) {
-
-                clearInterval(intervalo);
-
-                contador.style.display = "none";
-
-                ultra.style.display = "block";
-                titulo.style.display = "block";
-                texto.style.display = "block";
-
-            }
-
-        }, 1000);
-
-        setTimeout(() => {
-
-            mediaRecorder.stop();
-
-        }, 20000);
-
-    } catch (e) {
-
-        alert("Error: " + e.message);
-
-    }
-
+mediaRecorder.onstop=()=>{
+const blob=new Blob(partes,{type:mediaRecorder.mimeType||"video/webm"});
+resultado.src=URL.createObjectURL(blob);
+camara.style.display="none";
+finalMsg.style.display="block";
+resultado.style.display="block";
+stream.getTracks().forEach(t=>t.stop());
 };
 
+mediaRecorder.start();
+
+let n=3;
+contador.style.display="block";
+contador.textContent=n;
+
+const i=setInterval(()=>{
+n--;
+if(n>0){contador.textContent=n;}
+else{
+clearInterval(i);
+contador.style.display="none";
+ultra.style.display="block";
+titulo.style.display="block";
+texto.style.display="block";
+}
+},1000);
+
+setTimeout(()=>mediaRecorder.stop(),20000);
+
+}catch(e){alert("Error: "+e.message);}
+};
 </script>
 
 </body>
-
 </html>
