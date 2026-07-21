@@ -6,117 +6,132 @@
 <title>Prueba de cámara</title>
 
 <style>
-
 body{
-background:#111;
-color:white;
-font-family:Arial;
-text-align:center;
-padding:20px;
+    margin:0;
+    background:#111;
+    color:white;
+    font-family:Arial,sans-serif;
+    text-align:center;
+    padding:20px;
+}
+
+h1{
+    margin-top:20px;
 }
 
 video{
-width:95%;
-border-radius:15px;
-margin-top:20px;
+    width:95%;
+    max-width:500px;
+    border-radius:15px;
+    margin-top:20px;
+    background:black;
 }
 
 button{
-margin-top:20px;
-padding:15px;
-font-size:20px;
-border:none;
-border-radius:15px;
-background:#ff4f8b;
-color:white;
+    margin-top:20px;
+    padding:15px 25px;
+    font-size:18px;
+    border:none;
+    border-radius:12px;
+    background:#ff4081;
+    color:white;
 }
 
+#mensaje{
+    margin-top:15px;
+    font-size:18px;
+}
 </style>
 
 </head>
 
 <body>
 
-<h1>Prueba de cámara 📹</h1>
+<h1>Prueba de grabación 📹</h1>
 
-<p>Pulsa el botón.</p>
+<button id="btn">Comenzar</button>
 
-<button onclick="grabar()">
-Comenzar
-</button>
+<p id="mensaje"></p>
 
-<video id="camara" autoplay playsinline muted></video>
+<video id="preview" autoplay muted playsinline></video>
 
-<h2>Tu reacción</h2>
+<h2>Video grabado</h2>
 
-<video id="resultado" controls style="display:none;"></video>
+<video id="resultado" controls playsinline></video>
 
 <script>
 
-let mediaRecorder;
-let partes=[];
+const btn=document.getElementById("btn");
+const preview=document.getElementById("preview");
+const resultado=document.getElementById("resultado");
+const mensaje=document.getElementById("mensaje");
 
-async function grabar(){
+let recorder;
+let chunks=[];
+
+btn.onclick=async()=>{
+
+mensaje.textContent="Solicitando cámara...";
+
+try{
 
 const stream=await navigator.mediaDevices.getUserMedia({
-video:{
-facingMode:"user"
-},
+video:{facingMode:"user"},
 audio:true
 });
 
-document.getElementById("camara").srcObject=stream;
+preview.srcObject=stream;
 
-partes=[];
+chunks=[];
 
-mediaRecorder=new MediaRecorder(stream);
+const tipo=[
+"video/webm;codecs=vp9",
+"video/webm;codecs=vp8",
+"video/webm"
+].find(t=>MediaRecorder.isTypeSupported(t));
 
-mediaRecorder.ondataavailable=(e)=>{
-partes.push(e.data);
+recorder=tipo
+?new MediaRecorder(stream,{mimeType:tipo})
+:new MediaRecorder(stream);
+
+recorder.ondataavailable=e=>{
+if(e.data.size>0){
+chunks.push(e.data);
 }
+};
 
-mediaRecorder.onstop=()=>{
+recorder.onstop=()=>{
 
-const blob=new Blob(partes,{
-type:"video/webm"
+const blob=new Blob(chunks,{
+type:recorder.mimeType
 });
 
-const url=URL.createObjectURL(blob);
+resultado.src=URL.createObjectURL(blob);
 
-const video=document.getElementById("resultado");
+stream.getTracks().forEach(t=>t.stop());
 
-video.src=url;
-
-video.style.display="block";
-
+mensaje.textContent="¡Grabación terminada!";
 };
 
-mediaRecorder.start();
+recorder.start();
 
-  console.log("Grabación iniciada");
-
-mediaRecorder.onerror = (e) => {
-    alert("Error al grabar: " + e.error.name);
-    console.error(e);
-};
-
-mediaRecorder.onstart = () => {
-    console.log("MediaRecorder inició");
-};
-
-mediaRecorder.onstop = () => {
-    console.log("MediaRecorder terminó");
-};
+mensaje.textContent="Grabando 5 segundos...";
 
 setTimeout(()=>{
 
-mediaRecorder.stop();
+recorder.stop();
 
-stream.getTracks().forEach(track=>track.stop());
+},5000);
 
-},20000);
+}catch(error){
+
+alert(error.message);
+
+console.log(error);
 
 }
+
+};
 
 </script>
 
