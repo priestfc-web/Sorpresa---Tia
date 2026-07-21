@@ -199,10 +199,13 @@ Queríamos que fueras de las primeras personas en enterarte.
 </div>
 
 <script>
-
 const boton = document.getElementById("comenzar");
 const camara = document.getElementById("camara");
 const contador = document.getElementById("contador");
+const ultra = document.getElementById("ultra");
+const titulo = document.getElementById("titulo2");
+const texto = document.getElementById("texto2");
+const resultado = document.getElementById("resultado");
 
 let stream;
 let mediaRecorder;
@@ -210,58 +213,90 @@ let partes = [];
 
 boton.onclick = async () => {
 
-    boton.style.display = "none";
+    try {
 
-    stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-    });
+        boton.style.display = "none";
 
-    camara.srcObject = stream;
-    camara.style.display = "block";
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true
+        });
 
-    mediaRecorder = new MediaRecorder(stream);
+        camara.srcObject = stream;
+        camara.style.display = "block";
 
-    partes = [];
+        const opciones = {};
 
-    mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-            partes.push(e.data);
+        if (MediaRecorder.isTypeSupported("video/webm;codecs=vp9")) {
+            opciones.mimeType = "video/webm;codecs=vp9";
+        } else if (MediaRecorder.isTypeSupported("video/webm;codecs=vp8")) {
+            opciones.mimeType = "video/webm;codecs=vp8";
         }
-    };
 
-    mediaRecorder.start();
+        mediaRecorder = new MediaRecorder(stream, opciones);
 
-    let numero = 3;
+        partes = [];
 
-    contador.style.display = "block";
+        mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) partes.push(e.data);
+        };
 
-    contador.innerHTML = numero;
+        mediaRecorder.onstop = () => {
 
-    let intervalo = setInterval(() => {
+            const blob = new Blob(partes, {
+                type: mediaRecorder.mimeType || "video/webm"
+            });
 
-        numero--;
+            resultado.src = URL.createObjectURL(blob);
 
+            resultado.style.display = "block";
+
+            camara.style.display = "none";
+
+            stream.getTracks().forEach(track => track.stop());
+
+        };
+
+        mediaRecorder.start();
+
+        let numero = 3;
+
+        contador.style.display = "block";
         contador.innerHTML = numero;
 
-        if (numero == 0) {
+        const intervalo = setInterval(() => {
 
-            clearInterval(intervalo);
+            numero--;
 
-            contador.style.display = "none";
+            contador.innerHTML = numero;
 
-            document.getElementById("ultra").style.display = "block";
+            if (numero === 0) {
 
-            document.getElementById("titulo2").style.display = "block";
+                clearInterval(intervalo);
 
-            document.getElementById("texto2").style.display = "block";
+                contador.style.display = "none";
 
-        }
+                ultra.style.display = "block";
+                titulo.style.display = "block";
+                texto.style.display = "block";
 
-    },1000);
+            }
+
+        }, 1000);
+
+        setTimeout(() => {
+
+            mediaRecorder.stop();
+
+        }, 20000);
+
+    } catch (e) {
+
+        alert("Error: " + e.message);
+
+    }
 
 };
-
 </script>
 
 </body>
