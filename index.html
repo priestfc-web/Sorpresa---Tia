@@ -1,139 +1,209 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prueba de cámara</title>
+
+<title>Una sorpresa para ti ❤️</title>
 
 <style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
 body{
-    margin:0;
-    background:#111;
-    color:white;
-    font-family:Arial,sans-serif;
-    text-align:center;
-    padding:20px;
+
+background:linear-gradient(135deg,#ff9ecb,#ffd9ec);
+
+height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+overflow:hidden;
+
+}
+
+#contenedor{
+
+width:800px;
+
+max-width:90%;
+
+background:white;
+
+border-radius:25px;
+
+padding:40px;
+
+box-shadow:0 20px 60px rgba(0,0,0,.25);
+
+text-align:center;
+
 }
 
 h1{
-    margin-top:20px;
+
+font-size:45px;
+
+margin-bottom:25px;
+
+color:#ff4081;
+
 }
 
-video{
-    width:95%;
-    max-width:500px;
-    border-radius:15px;
-    margin-top:20px;
-    background:black;
+p{
+
+font-size:22px;
+
+margin-bottom:30px;
+
+color:#444;
+
+line-height:1.5;
+
 }
 
 button{
-    margin-top:20px;
-    padding:15px 25px;
-    font-size:18px;
-    border:none;
-    border-radius:12px;
-    background:#ff4081;
-    color:white;
+
+background:#ff4081;
+
+color:white;
+
+border:none;
+
+padding:18px 35px;
+
+font-size:22px;
+
+border-radius:50px;
+
+cursor:pointer;
+
+transition:.3s;
+
 }
 
-#mensaje{
-    margin-top:15px;
-    font-size:18px;
+button:hover{
+
+transform:scale(1.05);
+
 }
+
+video{
+
+margin-top:25px;
+
+width:100%;
+
+border-radius:20px;
+
+display:none;
+
+}
+
+#contador{
+
+font-size:120px;
+
+display:none;
+
+color:#ff4081;
+
+font-weight:bold;
+
+margin-top:25px;
+
+}
+
+img{
+
+display:none;
+
+width:75%;
+
+margin:auto;
+
+margin-top:20px;
+
+border-radius:20px;
+
+}
+
 </style>
 
 </head>
 
 <body>
 
-<h1>Prueba de grabación 📹</h1>
+<div id="contenedor">
 
-<button id="btn">Comenzar</button>
+<h1>
 
-<p id="mensaje"></p>
+❤️ Hola hermanita ❤️
 
-<video id="preview" autoplay muted playsinline></video>
+</h1>
 
-<h2>Video grabado</h2>
+<p>
 
-<video id="resultado" controls playsinline></video>
+Tengo algo muy importante que decirte...
+
+Pero antes quiero guardar este momento para siempre.
+
+</p>
+
+<button id="comenzar">
+
+Comenzar
+
+</button>
+
+<div id="contador">
+
+3
+
+</div>
+
+<video id="camara" autoplay playsinline muted></video>
+
+<img id="ultra" src="Ultrasonido.jpg">
+
+<h1 id="titulo2" style="display:none;">
+
+👶 ¡VAS A SER TÍA! 👶
+
+</h1>
+
+<p id="texto2" style="display:none;">
+
+Nuestro bebé ya viene en camino.
+
+Queríamos que fueras de las primeras personas en enterarte.
+
+❤️
+
+</p>
+
+<video id="resultado" controls></video>
+
+</div>
 
 <script>
 
-const btn=document.getElementById("btn");
-const preview=document.getElementById("preview");
-const resultado=document.getElementById("resultado");
-const mensaje=document.getElementById("mensaje");
-
-let recorder;
-let chunks=[];
-
-btn.onclick=async()=>{
-
-mensaje.textContent="Solicitando cámara...";
-
-try{
-
-const stream=await navigator.mediaDevices.getUserMedia({
-video:{facingMode:"user"},
-audio:true
-});
-
-preview.srcObject=stream;
-
-chunks=[];
-
-const tipo=[
-"video/webm;codecs=vp9",
-"video/webm;codecs=vp8",
-"video/webm"
-].find(t=>MediaRecorder.isTypeSupported(t));
-
-recorder=tipo
-?new MediaRecorder(stream,{mimeType:tipo})
-:new MediaRecorder(stream);
-
-recorder.ondataavailable=e=>{
-if(e.data.size>0){
-chunks.push(e.data);
-}
-};
-
-recorder.onstop=()=>{
-
-const blob=new Blob(chunks,{
-type:recorder.mimeType
-});
-
-resultado.src=URL.createObjectURL(blob);
-
-stream.getTracks().forEach(t=>t.stop());
-
-mensaje.textContent="¡Grabación terminada!";
-};
-
-recorder.start();
-
-mensaje.textContent="Grabando 5 segundos...";
-
-setTimeout(()=>{
-
-recorder.stop();
-
-},5000);
-
-}catch(error){
-
-alert(error.message);
-
-console.log(error);
-
-}
-
-};
+alert("¡Primera parte instalada correctamente! 🎉");
 
 </script>
 
 </body>
+
 </html>
