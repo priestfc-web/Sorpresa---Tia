@@ -93,6 +93,21 @@ video.style.display="block";
 
 mediaRecorder.start();
 
+  console.log("Grabación iniciada");
+
+mediaRecorder.onerror = (e) => {
+    alert("Error al grabar: " + e.error.name);
+    console.error(e);
+};
+
+mediaRecorder.onstart = () => {
+    console.log("MediaRecorder inició");
+};
+
+mediaRecorder.onstop = () => {
+    console.log("MediaRecorder terminó");
+};
+
 setTimeout(()=>{
 
 mediaRecorder.stop();
