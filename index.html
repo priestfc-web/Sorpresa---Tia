@@ -200,7 +200,67 @@ Queríamos que fueras de las primeras personas en enterarte.
 
 <script>
 
-alert("¡Primera parte instalada correctamente! 🎉");
+const boton = document.getElementById("comenzar");
+const camara = document.getElementById("camara");
+const contador = document.getElementById("contador");
+
+let stream;
+let mediaRecorder;
+let partes = [];
+
+boton.onclick = async () => {
+
+    boton.style.display = "none";
+
+    stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+    });
+
+    camara.srcObject = stream;
+    camara.style.display = "block";
+
+    mediaRecorder = new MediaRecorder(stream);
+
+    partes = [];
+
+    mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+            partes.push(e.data);
+        }
+    };
+
+    mediaRecorder.start();
+
+    let numero = 3;
+
+    contador.style.display = "block";
+
+    contador.innerHTML = numero;
+
+    let intervalo = setInterval(() => {
+
+        numero--;
+
+        contador.innerHTML = numero;
+
+        if (numero == 0) {
+
+            clearInterval(intervalo);
+
+            contador.style.display = "none";
+
+            document.getElementById("ultra").style.display = "block";
+
+            document.getElementById("titulo2").style.display = "block";
+
+            document.getElementById("texto2").style.display = "block";
+
+        }
+
+    },1000);
+
+};
 
 </script>
 
