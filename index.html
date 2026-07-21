@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Una sorpresa para ti ❤️</title>
@@ -49,6 +49,22 @@ padding:40px;
 box-shadow:0 20px 60px rgba(0,0,0,.25);
 
 text-align:center;
+
+animation:aparecer .8s ease;
+
+}
+
+@keyframes aparecer{
+
+from{
+opacity:0;
+transform:scale(.95);
+}
+
+to{
+opacity:1;
+transform:scale(1);
+}
 
 }
 
@@ -126,7 +142,7 @@ margin-top:25px;
 
 }
 
-img{
+#ultra{
 
 display:none;
 
@@ -137,6 +153,40 @@ margin:auto;
 margin-top:20px;
 
 border-radius:20px;
+
+animation:zoom .8s ease;
+
+}
+
+@keyframes zoom{
+
+from{
+
+opacity:0;
+
+transform:scale(.7);
+
+}
+
+to{
+
+opacity:1;
+
+transform:scale(1);
+
+}
+
+}
+
+#final{
+
+display:none;
+
+color:#ff4081;
+
+margin-top:25px;
+
+font-size:32px;
 
 }
 
@@ -149,9 +199,7 @@ border-radius:20px;
 <div id="contenedor">
 
 <h1>
-
 ❤️ Hola hermanita ❤️
-
 </h1>
 
 <p>
@@ -194,11 +242,18 @@ Queríamos que fueras de las primeras personas en enterarte.
 
 </p>
 
+<h2 id="final">
+
+❤️ ¡Tu reacción quedó grabada! ❤️
+
+</h2>
+
 <video id="resultado" controls></video>
 
 </div>
 
 <script>
+
 const boton = document.getElementById("comenzar");
 const camara = document.getElementById("camara");
 const contador = document.getElementById("contador");
@@ -206,6 +261,7 @@ const ultra = document.getElementById("ultra");
 const titulo = document.getElementById("titulo2");
 const texto = document.getElementById("texto2");
 const resultado = document.getElementById("resultado");
+const final = document.getElementById("final");
 
 let stream;
 let mediaRecorder;
@@ -238,7 +294,9 @@ boton.onclick = async () => {
         partes = [];
 
         mediaRecorder.ondataavailable = (e) => {
-            if (e.data.size > 0) partes.push(e.data);
+            if (e.data.size > 0) {
+                partes.push(e.data);
+            }
         };
 
         mediaRecorder.onstop = () => {
@@ -249,9 +307,9 @@ boton.onclick = async () => {
 
             resultado.src = URL.createObjectURL(blob);
 
-            resultado.style.display = "block";
-
             camara.style.display = "none";
+            final.style.display = "block";
+            resultado.style.display = "block";
 
             stream.getTracks().forEach(track => track.stop());
 
@@ -268,7 +326,9 @@ boton.onclick = async () => {
 
             numero--;
 
-            contador.innerHTML = numero;
+            if (numero > 0) {
+                contador.innerHTML = numero;
+            }
 
             if (numero === 0) {
 
@@ -297,6 +357,7 @@ boton.onclick = async () => {
     }
 
 };
+
 </script>
 
 </body>
